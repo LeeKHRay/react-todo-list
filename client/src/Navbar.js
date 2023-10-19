@@ -28,6 +28,9 @@ export const Navbar = () => {
                             </Nav.Link>
                         </Nav>
                         <Nav variant="pills" activeKey={activeKey} onSelect={handleSelect} className="ms-auto">
+                            <Nav.Link as="div" eventKey="/signup">
+                                <Link className="text-decoration-none text-light" to="/signup">Sign Up</Link>
+                            </Nav.Link>
                             <Nav.Link as="div" eventKey="/login">
                                 <Link className="text-decoration-none text-light" to="/login">Login</Link>
                             </Nav.Link>

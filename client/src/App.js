@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { TodoList } from './TodoList';
 import { About } from './About';
+import { SignUp } from './SignUp';
 import { Login } from './Login';
 
 export const App = () => {
@@ -15,6 +16,7 @@ export const App = () => {
                     <Route element={<Navbar />}>
                         <Route index element={<TodoList />}></Route>
                         <Route path="about" element={<About />}></Route>
+                        <Route path="signup" element={<SignUp />}></Route>
                         <Route path="login" element={<Login />}></Route>
                     </Route>
 
