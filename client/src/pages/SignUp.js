@@ -1,37 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from 'react-bootstrap/Button';
 import Form from "react-bootstrap/Form";
 import { useNavigate } from 'react-router-dom';
+import { postRequest } from '../utils';
 
 export const SignUp = () => {
     const [formState, setFormState] = useState({ username: "", password: "", repeatPassword: "" });
-    const [error, setError] = useState("");
+    const [response, setResponse] = useState(null);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (response?.ok) {
+            setTimeout(() => navigate("/login"), 3000);
+        }
+    }, [response]);
+
     const handleChange = ({ target }) => {
-        setFormState({ ...formState, [target.name]: target.value })
-        setError("");
+        setFormState(formState => ({ ...formState, [target.name]: target.value }));
+        setResponse(null);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const response = await fetch("/users/signup", { 
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(formState)
-        })
-
-        if (response.ok) {
-            navigate("/login");
-        }
-        else {
-            const { message } = await response.json();
-            setError(message);
-        }
+        const res = await postRequest("/users/signup", formState)
+        const { message } = await res.json();
+        setResponse({ ok: res.ok, message });
     }
 
     return (
@@ -54,7 +49,7 @@ export const SignUp = () => {
                     <Form.Control name="repeatPassword" type="password" placeholder="Repeat Your Password" value={formState.repeatPassword} onChange={handleChange} required />
                 </Form.Group>
 
-                {error && <Alert variant="danger">{error}</Alert>}
+                {response && <Alert variant={response.ok ? "success" : "danger"}>{response.message}</Alert>}
 
                 <Button variant="success" type="submit">Submit</Button>
             </Form>
