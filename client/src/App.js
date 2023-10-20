@@ -1,11 +1,8 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Navbar } from './Navbar';
-import { TodoList } from './TodoList';
-import { About } from './About';
-import { SignUp } from './SignUp';
-import { Login } from './Login';
+import { PageLayout } from './layouts';
+import { About, Login, SignUp, TodoList } from './pages';
 
 export const App = () => {
 
@@ -13,7 +10,7 @@ export const App = () => {
         <>
             <BrowserRouter>
                 <Routes>
-                    <Route element={<Navbar />}>
+                    <Route element={<PageLayout />}>
                         <Route index element={<TodoList />}></Route>
                         <Route path="about" element={<About />}></Route>
                         <Route path="signup" element={<SignUp />}></Route>

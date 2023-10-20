@@ -1,7 +1,7 @@
 import { useState } from "react";
+import Alert from "react-bootstrap/Alert";
 import Button from 'react-bootstrap/Button';
 import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
 import { useNavigate } from 'react-router-dom';
 
 export const SignUp = () => {
@@ -53,7 +53,9 @@ export const SignUp = () => {
                     <Form.Label>Repeat Password</Form.Label>
                     <Form.Control name="repeatPassword" type="password" placeholder="Repeat Your Password" value={formState.repeatPassword} onChange={handleChange} required />
                 </Form.Group>
+
                 {error && <Alert variant="danger">{error}</Alert>}
+
                 <Button variant="success" type="submit">Submit</Button>
             </Form>
         </>
