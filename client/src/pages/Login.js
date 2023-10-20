@@ -1,45 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from 'react-bootstrap/Button';
 import Form from "react-bootstrap/Form";
 import { useNavigate } from 'react-router-dom';
+import { setAuthToken, postRequest } from '../utils';
 
 export const Login = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [formState, setFormState] = useState({ username: "", password: "" });
+    const [response, setResponse] = useState(null);
     const navigate = useNavigate();
 
-    const handleUsernameChange = ({ target }) => {
-        setUsername(target.value);
-        setError("");
+    useEffect(() => {
+        if (response?.ok) {
+            setTimeout(() => navigate("/"), 3000);
+        }
+    }, [response]);
+
+    const handleChange = ({ target }) => {
+        setFormState(formState => ({ ...formState, [target.name]: target.value }));
+        setResponse(null);
     }
 
-    const handlePasswordChange = ({ target }) => {
-        setPassword(target.value);
-        setError("");
-    }
-    
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const response = await fetch("/users/login", { 
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ username, password })
-        });
-
-        if (response.ok) {
-            const { token } = await response.json();
-            console.log(token);
-            // navigate("/");
+        const res = await postRequest("/users/login", formState);
+        const { message, token } = await res.json();
+        if (res.ok) {
+            setAuthToken(token);
         }
-        else {
-            const { message } = await response.json();
-            setError(message);
-        }
+        setResponse({ ok: res.ok, message });
     }
 
     return (
@@ -49,15 +39,15 @@ export const Login = () => {
             <Form onSubmit={handleSubmit} >
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username</Form.Label>
-                    <Form.Control type="text" placeholder="Enter Your Username" value={username} onChange={handleUsernameChange} />
+                    <Form.Control name="username" type="text" placeholder="Enter Your Username" value={formState.username} onChange={handleChange} required />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="password">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Enter Your Password" value={password} onChange={handlePasswordChange} />
+                    <Form.Control name="password" type="password" placeholder="Enter Your Password" value={formState.password} onChange={handleChange} required />
                 </Form.Group>
 
-                {error && <Alert variant="danger">{error}</Alert>}
+                {response && <Alert variant={response.ok ? "success" : "danger"}>{response.message}</Alert>}
                 
                 <Button variant="success" type="submit">Submit</Button>
             </Form>
