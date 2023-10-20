@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import BSNavbar from 'react-bootstrap/Navbar';
-import { Link, Outlet, useLocation  } from 'react-router-dom';
+import { Link, useLocation  } from 'react-router-dom';
 
 export const Navbar = () => {
     const location = useLocation();
@@ -38,9 +38,6 @@ export const Navbar = () => {
                     </BSNavbar.Collapse>                        
                 </Container>
             </BSNavbar>
-            <Container>
-                <Outlet />
-            </Container>
         </>
     )
 }
