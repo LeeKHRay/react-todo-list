@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../contexts";
 import { getRequest, setAuthToken, getAuthToken, removeAuthToken } from "../utils";
 
 export const AuthProvider = ({ children }) => {
