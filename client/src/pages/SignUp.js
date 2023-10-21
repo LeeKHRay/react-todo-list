@@ -12,7 +12,8 @@ export const SignUp = () => {
 
     useEffect(() => {
         if (response?.ok) {
-            setTimeout(() => navigate("/login"), 3000);
+            const timer = setTimeout(() => navigate("/login"), 3000);
+            return () => clearTimeout(timer);
         }
     }, [response]);
 
