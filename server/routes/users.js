@@ -4,6 +4,8 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+const { authentication } = require("../middlewares");
+
 const User = require("../models/User");
 
 router.post("/signup", async (req, res) => {
@@ -66,6 +68,16 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(payload, "todoList", { expiresIn: "1h" }); // generate JsonWebToken, expire after 1 hour
 
     res.send({ message: 'Login successfully', token });
+});
+
+router.get("/user", authentication, async (req, res) => {
+    const user = await User.findOne({ username: req.payload.username });
+
+    if (!user) {
+        return res.status(401).send({ error: "Unauthorized" });
+    }
+
+    res.send({ username: user.username });
 });
 
 module.exports = router;
