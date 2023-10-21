@@ -3,11 +3,13 @@ import Alert from "react-bootstrap/Alert";
 import Button from 'react-bootstrap/Button';
 import Form from "react-bootstrap/Form";
 import { useNavigate } from 'react-router-dom';
-import { setAuthToken, postRequest } from '../utils';
+import { postRequest } from '../utils';
+import { useAuth } from '../hooks/useAuth';
 
 export const Login = () => {
     const [formState, setFormState] = useState({ username: "", password: "" });
     const [response, setResponse] = useState(null);
+    const { setToken } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,7 +30,7 @@ export const Login = () => {
         const res = await postRequest("/users/login", formState);
         const { message, token } = await res.json();
         if (res.ok) {
-            setAuthToken(token);
+            setToken(token);
         }
         setResponse({ ok: res.ok, message });
     }
