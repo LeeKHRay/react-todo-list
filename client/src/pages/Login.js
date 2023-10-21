@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from "react-bootstrap/Form";
 import { useNavigate } from 'react-router-dom';
 import { postRequest } from '../utils';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks';
 
 export const Login = () => {
     const [formState, setFormState] = useState({ username: "", password: "" });
@@ -14,7 +14,7 @@ export const Login = () => {
 
     useEffect(() => {
         if (response?.ok) {
-            const timer = setTimeout(() => navigate("/"), 3000);
+            const timer = setTimeout(() => navigate("/", { replace: true }), 3000);
             return () => clearTimeout(timer);
         }
     }, [response]);
