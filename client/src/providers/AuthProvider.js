@@ -12,14 +12,16 @@ export const AuthProvider = ({ children }) => {
             if (token) {
                 setAuthToken(token);
 
-                const res = await getRequest("/users/user");
+                const res = await getRequest("/api/users/user");
                 if (res.ok) {
                     const user = await res.json();
                     setUser(user);
                     return;
                 }
             }
+            
             removeAuthToken();
+            setUser(null);
         })();
     }, [token]);
 

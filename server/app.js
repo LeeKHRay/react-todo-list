@@ -8,7 +8,7 @@ require('./config/db_connection'); // connect to MongoDB
 
 app.use(express.json());
 
-app.use("/users", require("./routes/users"));
-app.use("/tasks", require("./routes/tasks"));
+app.use("/api/users", require("./routes/users"));
+app.use("/api/tasks", require("./routes/tasks"));
 
 app.listen(3001);
