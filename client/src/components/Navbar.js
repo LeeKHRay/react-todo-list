@@ -1,38 +1,48 @@
-import { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import BSNavbar from 'react-bootstrap/Navbar';
-import { Link, useLocation  } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { Logout } from './Logout';
+import { useAuth } from '../hooks';
 
 export const Navbar = () => {
-    const location = useLocation();
-    const [activeKey, setActiveKey] = useState(location.pathname.match(/\/[^/]*/)[0])
-
-    const handleSelect = (selectedKey) => {
-        setActiveKey(selectedKey);
-    }
+    const { token } = useAuth();
 
     return (
         <BSNavbar expand="lg" bg="dark" data-bs-theme="dark" sticky="top" className="mb-3">
             <Container>
-                <BSNavbar.Brand href="/">Todo List</BSNavbar.Brand>
+                <BSNavbar.Brand as={NavLink} to="/">Todo List</BSNavbar.Brand>
                 <BSNavbar.Toggle aria-controls="navbar-nav" />
                 <BSNavbar.Collapse id="navbar-nav">
-                    <Nav variant="pills" activeKey={activeKey} onSelect={handleSelect}>
-                        <Nav.Link as="div" eventKey="/">
-                            <Link className="text-decoration-none text-light" to="/">Home</Link>
-                        </Nav.Link>
-                        <Nav.Link as="div" eventKey="/about">
-                            <Link className="text-decoration-none text-light" to="/about">About</Link>
-                        </Nav.Link>
+                    <Nav variant="pills">
+                        <Nav.Item>
+                            <Nav.Link as={NavLink} className="text-light" to="/">Home</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link as={NavLink} className="text-light" to="/about">About</Nav.Link>
+                        </Nav.Item>
+                        {token &&
+                            <Nav.Item>
+                                <Nav.Link as={NavLink} className="text-light" to="/tasks">Tasks</Nav.Link>
+                            </Nav.Item>
+                        }
                     </Nav>
-                    <Nav variant="pills" activeKey={activeKey} onSelect={handleSelect} className="ms-auto">
-                        <Nav.Link as="div" eventKey="/signup">
-                            <Link className="text-decoration-none text-light" to="/signup">Sign Up</Link>
-                        </Nav.Link>
-                        <Nav.Link as="div" eventKey="/login">
-                            <Link className="text-decoration-none text-light" to="/login">Login</Link>
-                        </Nav.Link>
+                    <Nav variant="pills" className="ms-auto">
+                        {!token &&
+                            <>
+                                <Nav.Item>
+                                    <Nav.Link as={NavLink} className="text-light" to="/signup">Sign Up</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item >
+                                    <Nav.Link as={NavLink} className="text-light" to="/login">Login</Nav.Link>
+                                </Nav.Item>
+                            </>
+                        }
+                        {token &&
+                            <Nav.Item>
+                                <Logout />
+                            </Nav.Item>
+                        }
                     </Nav>
                 </BSNavbar.Collapse>                        
             </Container>
