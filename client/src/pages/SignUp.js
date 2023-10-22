@@ -25,7 +25,7 @@ export const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const res = await postRequest("/users/signup", formState)
+        const res = await postRequest("/api/users/signup", formState)
         const { message } = await res.json();
         setResponse({ ok: res.ok, message });
     }

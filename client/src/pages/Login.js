@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from 'react-bootstrap/Button';
 import Form from "react-bootstrap/Form";
@@ -12,13 +12,6 @@ export const Login = () => {
     const { setToken } = useAuth();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (response?.ok) {
-            const timer = setTimeout(() => navigate("/", { replace: true }), 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [response]);
-
     const handleChange = ({ target }) => {
         setFormState(formState => ({ ...formState, [target.name]: target.value }));
         setResponse(null);
@@ -27,12 +20,13 @@ export const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const res = await postRequest("/users/login", formState);
+        const res = await postRequest("/api/users/login", formState);
         const { message, token } = await res.json();
         if (res.ok) {
             setToken(token);
         }
         setResponse({ ok: res.ok, message });
+        navigate("/tasks", { replace: true });
     }
 
     return (
