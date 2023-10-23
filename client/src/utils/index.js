@@ -5,7 +5,11 @@ export const getAuthToken = () => localStorage.getItem(keyName);
 export const removeAuthToken = () => localStorage.removeItem(keyName);
 
 export const getRequest = (url) => {
-    return fetcher(url, {});
+    const options = {
+        method: "GET"
+    };
+
+    return fetcher(url, options);
 };
 
 export const postRequest = (url, data) => {
@@ -15,13 +19,36 @@ export const postRequest = (url, data) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(data)
-    }
+    };
+
+    return fetcher(url, options);
+};
+
+export const putRequest = (url, data) => {
+    const options = {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    };
+
+    return fetcher(url, options);
+};
+
+export const deleteRequest = (url) => {
+    const options = {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
 
     return fetcher(url, options);
 };
 
 const fetcher = (url, options) => {
-    const token = localStorage.getItem(keyName)
+    const token = localStorage.getItem(keyName);
     if (token) {
         if (!options.headers) {
             options.headers = {};
