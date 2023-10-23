@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
 
-export const ProtectedRoute = ({ condition, redirect }) => {
-    return condition ? <Outlet /> : <Navigate to={redirect} replace />
+export const ProtectedRoute = ({ canAccess, redirect }) => {
+    return canAccess ? <Outlet /> : <Navigate to={redirect} replace />
 }

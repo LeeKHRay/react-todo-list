@@ -6,7 +6,6 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(getAuthToken);
     const [user, setUser] = useState(null);
 
-    console.log(token, user)
     useEffect(() => {
         (async () => {
             if (token) {

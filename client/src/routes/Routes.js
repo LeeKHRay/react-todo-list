@@ -21,7 +21,7 @@ export const Routes = () => {
     const routesForAuthenticatedOnly = [
         {
             path: "/",
-            element: <ProtectedRoute condition={() => token} redirect="/login" />,
+            element: <ProtectedRoute canAccess={token} redirect="/login" />,
             children: [
                 {
                     path: "/tasks",
@@ -34,7 +34,7 @@ export const Routes = () => {
     const routesForNotAuthenticatedOnly = [
         {
             path: "/",
-            element: <ProtectedRoute condition={() => !token} redirect="/tasks" />,
+            element: <ProtectedRoute canAccess={!token} redirect="/tasks" />,
             children: [
                 {
                     path: "/signup",
