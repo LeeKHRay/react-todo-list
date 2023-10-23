@@ -2,7 +2,6 @@ import { useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from 'react-bootstrap/Button';
 import Form from "react-bootstrap/Form";
-import { useNavigate } from 'react-router-dom';
 import { postRequest } from '../utils';
 import { useAuth } from '../hooks';
 
@@ -10,7 +9,6 @@ export const Login = () => {
     const [formState, setFormState] = useState({ username: "", password: "" });
     const [response, setResponse] = useState(null);
     const { setToken } = useAuth();
-    const navigate = useNavigate();
 
     const handleChange = ({ target }) => {
         setFormState(formState => ({ ...formState, [target.name]: target.value }));
@@ -26,7 +24,7 @@ export const Login = () => {
             setToken(token);
         }
         setResponse({ ok: res.ok, message });
-        navigate("/tasks", { replace: true });
+        // redirect to /tasks in <ProtectedRoute />
     }
 
     return (
