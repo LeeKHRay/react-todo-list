@@ -3,12 +3,12 @@ import { useAuth } from "../hooks";
 import { useNavigate } from "react-router-dom";
 
 export const Logout = () => {
-    const { setToken } = useAuth();
+    const { logout } = useAuth();
     const navigate = useNavigate();
     
-    const handleClick = async () => {
-        setToken(null);
-        navigate("/", { replace: true })
+    const handleClick = () => {
+        logout();
+        navigate("/", { replace: true });
     }
 
     return (

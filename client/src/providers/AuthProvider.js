@@ -1,34 +1,43 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { AuthContext } from "../contexts";
-import { getRequest, setAuthToken, getAuthToken, removeAuthToken } from "../utils";
+import { getRequest, setAuthToken, removeAuthToken } from "../utils";
+
+const getUser = async () => {
+    const res = await getRequest("/api/users/user");
+    if (res.ok) {
+        return await res.json();
+    }
+    return null;
+}
 
 export const AuthProvider = ({ children }) => {
-    const [token, setToken] = useState(getAuthToken);
     const [user, setUser] = useState(null);
-
+    const [isValidatedToken, setIsValidatedToken] = useState(false);
+    
     useEffect(() => {
         (async () => {
-            if (token) {
-                setAuthToken(token);
-
-                const res = await getRequest("/api/users/user");
-                if (res.ok) {
-                    const user = await res.json();
-                    setUser(user);
-                    return;
-                }
+            const user = await getUser();
+            if (user) {
+                setUser(user);
             }
-            
-            removeAuthToken();
-            setUser(null);
+            else {
+                removeAuthToken();
+            }
+            setIsValidatedToken(true);
         })();
-    }, [token]);
+    }, []);
 
-    const contextValue = useMemo(() => ({ 
-        token, 
-        setToken,
-        user
-    }), [token, user]);
+    const login = useCallback(async (token) => {
+        setAuthToken(token);
+        setUser(await getUser());
+    }, []);
+
+    const logout = useCallback(() => {
+        removeAuthToken();
+        setUser(null);
+    }, []);
+
+    const contextValue = useMemo(() => ({ user, isValidatedToken, login, logout }), [user, isValidatedToken]);
 
     return (
         <AuthContext.Provider value={contextValue}>

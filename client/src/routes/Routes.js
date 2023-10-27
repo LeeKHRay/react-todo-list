@@ -5,57 +5,45 @@ import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 import { ProtectedRoute } from '../routes';
 
 export const Routes = () => {
-    const { token } = useAuth();
-
-    const routesForPublic = [
-        {
-            path: "/",
-            element: <Home />
-        },
-        {
-            path: "/about",
-            element: <About />
-        }
-    ];
-    
-    const routesForAuthenticatedOnly = [
-        {
-            path: "/",
-            element: <ProtectedRoute canAccess={token} redirect="/login" />,
-            children: [
-                {
-                    path: "/tasks",
-                    element: <TodoList />
-                }
-            ]
-        }
-    ];
-    
-    const routesForNotAuthenticatedOnly = [
-        {
-            path: "/",
-            element: <ProtectedRoute canAccess={!token} redirect="/tasks" />,
-            children: [
-                {
-                    path: "/signup",
-                    element: <SignUp />
-                },
-                {
-                    path: "/login",
-                    element: <Login />
-                }
-            ]
-        }
-    ];
+    const { user } = useAuth();
 
     const router = createBrowserRouter([
         {
             path: "/",
             element: <PageLayout />,
             children: [
-                ...routesForPublic,
-                ...routesForNotAuthenticatedOnly,
-                ...routesForAuthenticatedOnly,
+                {
+                    path: "/",
+                    element: <Home />
+                },
+                {
+                    path: "/about",
+                    element: <About />
+                },
+                {
+                    path: "/",
+                    element: <ProtectedRoute canAccess={!!user} redirect="/login" />,
+                    children: [
+                        {
+                            path: "/tasks",
+                            element: <TodoList />
+                        }
+                    ]
+                },
+                {
+                    path: "/",
+                    element: <ProtectedRoute canAccess={!user} redirect="/tasks" />,
+                    children: [
+                        {
+                            path: "/signup",
+                            element: <SignUp />
+                        },
+                        {
+                            path: "/login",
+                            element: <Login />
+                        }
+                    ]
+                }
             ]
         },
         {

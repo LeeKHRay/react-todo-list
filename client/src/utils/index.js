@@ -1,7 +1,7 @@
-const keyName = "authToken";
+const keyName = "jwt_token";
 
+const getAuthToken = () => localStorage.getItem(keyName);
 export const setAuthToken = token => localStorage.setItem(keyName, token);
-export const getAuthToken = () => localStorage.getItem(keyName);
 export const removeAuthToken = () => localStorage.removeItem(keyName);
 
 export const getRequest = (url) => {
@@ -48,7 +48,7 @@ export const deleteRequest = (url) => {
 };
 
 const fetcher = (url, options) => {
-    const token = localStorage.getItem(keyName);
+    const token = getAuthToken();
     if (token) {
         if (!options.headers) {
             options.headers = {};
