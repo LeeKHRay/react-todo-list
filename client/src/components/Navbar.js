@@ -6,7 +6,7 @@ import { Logout } from './Logout';
 import { useAuth } from '../hooks';
 
 export const Navbar = () => {
-    const { token } = useAuth();
+    const { user, isValidatedToken } = useAuth();
 
     return (
         <BSNavbar expand="lg" bg="dark" data-bs-theme="dark" sticky="top" className="mb-3">
@@ -21,27 +21,28 @@ export const Navbar = () => {
                         <Nav.Item>
                             <Nav.Link as={NavLink} className="text-light" to="/about">About</Nav.Link>
                         </Nav.Item>
-                        {token &&
+                        {isValidatedToken && user &&
                             <Nav.Item>
                                 <Nav.Link as={NavLink} className="text-light" to="/tasks">Tasks</Nav.Link>
                             </Nav.Item>
                         }
                     </Nav>
                     <Nav variant="pills" className="ms-auto">
-                        {!token &&
-                            <>
+                        {isValidatedToken && 
+                            (
+                                user ?
                                 <Nav.Item>
-                                    <Nav.Link as={NavLink} className="text-light" to="/signup">Sign Up</Nav.Link>
-                                </Nav.Item>
-                                <Nav.Item >
-                                    <Nav.Link as={NavLink} className="text-light" to="/login">Login</Nav.Link>
-                                </Nav.Item>
-                            </>
-                        }
-                        {token &&
-                            <Nav.Item>
-                                <Logout />
-                            </Nav.Item>
+                                    <Logout />
+                                </Nav.Item> :
+                                <>
+                                    <Nav.Item>
+                                        <Nav.Link as={NavLink} className="text-light" to="/signup">Sign Up</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item >
+                                        <Nav.Link as={NavLink} className="text-light" to="/login">Login</Nav.Link>
+                                    </Nav.Item>
+                                </>
+                            )
                         }
                     </Nav>
                 </BSNavbar.Collapse>                        

@@ -8,7 +8,7 @@ import { useAuth } from '../hooks';
 export const Login = () => {
     const [formState, setFormState] = useState({ username: "", password: "" });
     const [response, setResponse] = useState(null);
-    const { setToken } = useAuth();
+    const { login } = useAuth();
 
     const handleChange = ({ target }) => {
         setFormState(formState => ({ ...formState, [target.name]: target.value }));
@@ -21,7 +21,7 @@ export const Login = () => {
         const res = await postRequest("/api/users/login", formState);
         const { message, token } = await res.json();
         if (res.ok) {
-            setToken(token);
+            await login(token);
         }
         setResponse({ ok: res.ok, message });
         // redirect to /tasks in <ProtectedRoute />
