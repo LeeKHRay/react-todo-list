@@ -11,36 +11,33 @@ router.use(authentication); // default path is '/'
 router.get("/", async (req, res) => {
     const { username } = req.payload;
 
-    const tasks = await Task.find({ username }).exec();
+    const tasks = await Task.find({ username }, "-username").sort({ priority: 1 }).exec();
 
-    res.send(tasks.map(({ _id, task, isDone, username }) => ({ id: _id, task, isDone, username })));
+    res.send(tasks.map(({ _id, task, priority, isDone }) => ({ id: _id, task, priority, isDone })));
 });
 
 router.post("/", async (req, res) => {
     const { username } = req.payload;
+    const { task } = req.body;
 
-    const { _id, task, isDone } = await Task.create({ task: req.body.task, username });
+    const priority = await Task.countDocuments({ username }).exec() + 1;
+    const { _id, isDone } = await Task.create({ task, priority, username });
 
-    res.setHeader("Location", `http://localhost:3000/api/tasks/${_id}`).status(201).send({ id: _id, task, isDone, username });
+    res.setHeader("Location", `http://localhost:3000/api/tasks/${_id}`).status(201).send({ id: _id, task, priority, isDone });
 });
 
 router.put("/", async (req, res) => {
     const { username } = req.payload;
     const tasks = req.body;
-    console.log(req.body);
-    console.log(tasks.map((task) => ({
-        replaceOne: {
-            upsert: true,
-            filter: { _id: new mongoose.Types.ObjectId(task.id), username },
-            replacement: task
-        }
-    })));
 
     await Task.bulkWrite(tasks.map((task) => ({
         replaceOne: {
             upsert: true,
             filter: { _id: new mongoose.Types.ObjectId(task.id), username },
-            replacement: task
+            replacement: {
+                ...task,
+                username
+            }
         }
     })));
 
@@ -51,7 +48,7 @@ router.delete("/:id", async (req, res) => {
     const { username } = req.payload;
     const { id } = req.params;
 
-    await Task.deleteOne({ username, _id: new mongoose.Types.ObjectId(id) }).exec();
+    await Task.deleteOne({ _id: new mongoose.Types.ObjectId(id), username }).exec();
 
     res.send({});
 });

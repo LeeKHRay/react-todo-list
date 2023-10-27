@@ -58,3 +58,8 @@ const fetcher = (url, options) => {
 
     return fetch(url, options);
 }
+
+// item types for draggable item
+export const ItemTypes = {
+    TASK: 'task',
+}
