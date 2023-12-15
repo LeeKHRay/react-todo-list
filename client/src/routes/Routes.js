@@ -1,11 +1,11 @@
-import { useAuth } from '../hooks';
+import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom';
 import { Home, About, Login, SignUp, TodoList } from '../pages';
 import { PageLayout } from '../layouts';
-import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '../routes';
+import { useAuthContext } from '../contexts';
 
 export const Routes = () => {
-    const { user } = useAuth();
+    const { user } = useAuthContext();
 
     const router = createBrowserRouter([
         {

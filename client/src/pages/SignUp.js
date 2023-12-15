@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import Alert from "react-bootstrap/Alert";
 import Button from 'react-bootstrap/Button';
 import Form from "react-bootstrap/Form";
-import { useNavigate } from 'react-router-dom';
+import { useFormState } from '../hooks';
 import { postRequest } from '../utils';
 
 export const SignUp = () => {
-    const [formState, setFormState] = useState({ username: "", password: "", repeatPassword: "" });
-    const [response, setResponse] = useState(null);
+    const [formState, setFormState, response, setResponse] = useFormState({ username: "", password: "", repeatPassword: "" });
     const navigate = useNavigate();
 
     useEffect(() => {

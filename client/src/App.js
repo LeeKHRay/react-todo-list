@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes } from './routes';
-import { AuthProvider } from './providers/AuthProvider';
+import { AuthProvider } from './contexts';
 
 export const App = () => {
     return (
