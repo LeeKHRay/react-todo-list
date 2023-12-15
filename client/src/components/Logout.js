@@ -1,9 +1,9 @@
-import Button from "react-bootstrap/Button";
-import { useAuth } from "../hooks";
 import { useNavigate } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import { useAuthContext } from "../contexts";
 
 export const Logout = () => {
-    const { logout } = useAuth();
+    const { logout } = useAuthContext();
     const navigate = useNavigate();
     
     const handleClick = () => {

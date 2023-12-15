@@ -1,14 +1,13 @@
-import { useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from 'react-bootstrap/Button';
 import Form from "react-bootstrap/Form";
 import { postRequest } from '../utils';
-import { useAuth } from '../hooks';
+import { useFormState } from '../hooks';
+import { useAuthContext } from '../contexts';
 
 export const Login = () => {
-    const [formState, setFormState] = useState({ username: "", password: "" });
-    const [response, setResponse] = useState(null);
-    const { login } = useAuth();
+    const [formState, setFormState, response, setResponse] = useFormState({ username: "", password: "" });
+    const { login } = useAuthContext();
 
     const handleChange = ({ target }) => {
         setFormState(formState => ({ ...formState, [target.name]: target.value }));

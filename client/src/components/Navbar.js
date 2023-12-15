@@ -2,11 +2,11 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import BSNavbar from 'react-bootstrap/Navbar';
 import { NavLink } from 'react-router-dom';
-import { Logout } from './Logout';
-import { useAuth } from '../hooks';
+import { Logout } from '../components';
+import { useAuthContext } from '../contexts';
 
 export const Navbar = () => {
-    const { user, isValidatedToken } = useAuth();
+    const { user, isValidatedToken } = useAuthContext();
 
     return (
         <BSNavbar expand="lg" bg="dark" data-bs-theme="dark" sticky="top" className="mb-3">
