@@ -39,8 +39,17 @@ export const TodoList = () => {
     const navigate = useNavigate();
     
     useEffect(() => {
+        handleGet();
+    }, []);
+
+    const handleGet = (searchString) => {
         (async () => {
-            const res = await getRequest("/api/tasks");
+            let url = "/api/tasks";
+            if (searchString) {
+                url += `?search=${searchString}`;
+            }
+
+            const res = await getRequest(url);
             if (res.ok) {
                 const tasks = await res.json();
                 dispatch({ type: "set_tasks", tasks });
@@ -49,9 +58,9 @@ export const TodoList = () => {
                 navigate("/login", { replace: true });
             }
         })();
-    }, []);
+    };
 
-    const handleAddTask = task => dispatch({ type: "add_task", newTask: task });
+    const handleAdd = task => dispatch({ type: "add_task", newTask: task });
 
     const handleComplete = useCallback(({ target }, task) => {
         dispatch({ type: "edit_task", task: { ...task, isDone: target.checked }});
@@ -70,18 +79,21 @@ export const TodoList = () => {
     
     return (
         <>
-            <TodoListHeader tasks={tasks} />
+            <TodoListHeader tasks={tasks} onGet={handleGet} />
             
+            {
+                tasks.length > 0 && 
             <DndProvider backend={HTML5Backend}>
                 <div style={{padding: "10px", backgroundColor: "#c6f7da", border: "1px solid #20c997", borderRadius: "0.375rem", marginBottom: 70}}>
                     {
-                        tasks.map((task, i) => <Task key={task.id} task={task} onComplete={handleComplete} onEdit={handleEdit} onDelete={handleDelete} onMove={handleMove} />)
+                            tasks.map(task => <Task key={task.id} task={task} onComplete={handleComplete} onEdit={handleEdit} onDelete={handleDelete} onMove={handleMove} />)
                     }
                 </div>
                 <CustomDragLayer />
             </DndProvider>
+            }
 
-            <TodoListFooter onAddTask={handleAddTask} />
+            <TodoListFooter onAdd={handleAdd} />
         </>
     )
 }

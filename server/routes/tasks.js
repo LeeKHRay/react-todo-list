@@ -10,8 +10,14 @@ router.use(authentication); // default path is '/'
 
 router.get("/", async (req, res) => {
     const { username } = req.payload;
+    const { search = "" } = req.query;
 
-    const tasks = await Task.find({ username }, "-username").sort({ priority: 1 }).exec();
+    const tasks = await Task.find({ 
+        username, 
+        name: { $regex: `.*${search}.*`, $options : 'i' } 
+    }, "-username")
+    .sort({ priority: 1 })
+    .exec();
 
     res.send(tasks.map(({ _id, name, priority, isDone }) => ({ id: _id, name, priority, isDone })));
 });
