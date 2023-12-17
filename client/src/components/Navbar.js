@@ -7,7 +7,7 @@ import { useAuthContext } from '../contexts';
 
 export const Navbar = () => {
     const { user, isValidatedToken } = useAuthContext();
-
+    
     return (
         <BSNavbar expand="lg" bg="dark" data-bs-theme="dark" sticky="top" className="mb-3">
             <Container>
@@ -31,9 +31,14 @@ export const Navbar = () => {
                         {isValidatedToken && 
                             (
                                 user ?
-                                <Nav.Item>
-                                    <Logout />
-                                </Nav.Item> :
+                                <>
+                                    <Nav.Item>
+                                        <Nav.Link className="text-primary" to="/tasks">{user.username}</Nav.Link>
+                                    </Nav.Item> 
+                                    <Nav.Item>
+                                        <Logout />
+                                    </Nav.Item> 
+                                </> :
                                 <>
                                     <Nav.Item>
                                         <Nav.Link as={NavLink} className="text-light" to="/signup">Sign Up</Nav.Link>

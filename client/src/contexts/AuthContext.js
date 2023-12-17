@@ -3,7 +3,15 @@ import { getRequest, setAuthToken, removeAuthToken } from "../utils";
 
 const AuthContext = createContext();
 
-export const useAuthContext = () => useContext(AuthContext);
+export const useAuthContext = () => {
+    const auth = useContext(AuthContext);
+
+    if (!auth) {
+            throw new Error("useAuthContext must be used within AuthProvider");
+    }
+    
+    return auth;
+}
 
 const getUser = async () => {
     const res = await getRequest("/api/users/user");
