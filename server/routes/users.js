@@ -16,6 +16,15 @@ router.post("/signup", async (req, res) => {
     if (username === "" || password === "" || repeatPassword === "") {
         return res.status(400).send({ message: "Please enter all fields" });
     }
+
+    if (!username.match(/^\S{6,}$/g)) { // at least 6 non-space characters
+        return res.status(400).send({ message: "Please enter a valid username" });
+    }
+
+    if (!password.match(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/g)) { // at least 8 characters, only contains lowercase and uppercase letter and number
+        return res.status(400).send({ message: "Please enter a valid password" });
+    }
+
     if (password !== repeatPassword) {
         return res.status(400).send({ message: "Please enter the same password" });
     }
