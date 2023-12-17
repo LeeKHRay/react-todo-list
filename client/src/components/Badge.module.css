@@ -1,0 +1,19 @@
+.badge {
+    margin-left: 12px;
+}
+
+.left {
+    padding: 6px;
+    border-radius: 7px 0 0 7px;
+    background-color: #464861;
+    color: #3a93f2;
+    font-weight: bold;
+}
+
+.right {
+    padding: 6px;
+    border-radius: 0 7px 7px 0;
+    background-color: #3a93f2;
+    color: ghostwhite;
+    font-weight: bold;
+}
