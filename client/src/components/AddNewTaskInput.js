@@ -24,15 +24,12 @@ export const AddNewTaskInput = ({onAddTask: addTask}) => {
         setTaskName("");
     };
     
-
     return (
-        <div className="">
-            <InputGroup style={{margin: "10px 0"}}>
-                <Form.Control className="border-primary" type="text" placeholder="Add new task" value={taskName} onChange={handleChange} />
-                <Button variant="outline-primary" onClick={handleAddTask}>
-                    <i className="bi-plus-lg"></i>
-                </Button>
-            </InputGroup>
-        </div>
+        <InputGroup>
+            <Form.Control className="border-warning" type="text" placeholder="Add new task" value={taskName} onChange={handleChange} />
+            <Button variant="outline-warning" onClick={handleAddTask}>
+                <i className="bi-plus-lg"></i>
+            </Button>
+        </InputGroup>
     );
 };

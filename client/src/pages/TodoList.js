@@ -2,10 +2,9 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { useEffect, useReducer, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Task, TodoListHeader, CustomDragLayer, AddNewTaskBar } from "../components";
+import { Task, TodoListHeader, TodoListFooter, CustomDragLayer } from "../components";
 import { getRequest, putRequest, deleteRequest } from "../utils";
 
 const reducer = (tasks, action) => {
@@ -82,13 +81,7 @@ export const TodoList = () => {
                 <CustomDragLayer />
             </DndProvider>
 
-            <div style={{width: "100%", position: "fixed", left: 0, bottom:0, padding: "0", zIndex: 100}}>
-                <Container>
-                    <div style={{padding: "0 10px",backgroundColor: "yellowgreen", border: "1px solid #20c997", borderRadius: "0.375rem 0.375rem 0 0"}}>
-                        <AddNewTaskInput onAddTask={handleAddTask} />
-                    </div>
-                </Container>
-            </div>
+            <TodoListFooter onAddTask={handleAddTask} />
         </>
     )
 }

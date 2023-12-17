@@ -67,23 +67,23 @@ export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
 
     return (
         <InputGroup className={`${styles.task} ${opacity}`} data-handler-id={handlerId} ref={drop}>
-            <span className="input-group-text border-dark p-1" style={{ cursor: "move" }} ref={dragRef}>
-                <i className="bi bi-grip-vertical" style={{ fontSize: "1.5em" }} />
+            <span className={`input-group-text border-success p-1 ${styles.dragHandle}`} ref={dragRef}>
+                <i className="bi bi-grip-vertical" />
             </span>
-            <span className="input-group-text border-dark">
+            <span className="input-group-text border-success">
                 <div>
-                    <input type="checkbox" className="form-check-input border-dark" checked={isDone} onChange={(e) => onComplete(e, task)} />
+                    <input type="checkbox" className="form-check-input border-success" checked={isDone} onChange={(e) => onComplete(e, task)} />
                 </div>
             </span>
             <Form.Control 
                 type="text" 
-                className={`border-dark ${isDone ? styles.done : ""}`}
+                className={`border-success ${isDone ? styles.done : ""}`}
                 value={name} 
                 onChange={(e) => onEdit(e, task)} 
                 placeholder="Enter your task" 
                 readOnly={isDone}
             />
-            <Button variant="danger" className="border-dark" onClick={() => onDelete(id)}>
+            <Button variant="danger" className="border-success" onClick={() => onDelete(id)}>
                 <i className="bi-trash" />
             </Button>
         </InputGroup>
