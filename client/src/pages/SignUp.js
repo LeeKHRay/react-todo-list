@@ -38,11 +38,18 @@ export const SignUp = () => {
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username</Form.Label>
                     <Form.Control name="username" type="text" placeholder="Enter Your Username" value={formState.username} onChange={handleChange} required />
+                    <Form.Text muted>
+                        The username must have at least 6 characters and must not contain spaces.
+                    </Form.Text>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="password">
                     <Form.Label>Password</Form.Label>
                     <Form.Control name="password" type="password" placeholder="Enter Your Password" value={formState.password} onChange={handleChange} required />
+                    <Form.Text muted>
+                        The password must have at least 8 characters, contain lowercase and uppercase letters and numbers,
+                        and must not contain spaces, special characters.
+                    </Form.Text>
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="repeat-password">
