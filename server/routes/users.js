@@ -65,7 +65,7 @@ router.post("/login", async (req, res) => {
     const payload = {
         username
     }
-    const token = jwt.sign(payload, "todoList", { expiresIn: "1h" }); // generate JsonWebToken, expire after 1 hour
+    const token = jwt.sign(payload, "todoList", { expiresIn: "1d" }); // generate JsonWebToken, expire after 1 day
 
     res.send({ message: 'Login successfully', token });
 });
