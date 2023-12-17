@@ -10,6 +10,14 @@
     margin-bottom: 0;
 }
 
+.dragHandle {
+    cursor: move;
+}
+
+.dragHandle i {
+    font-size: 1.5em;
+}
+
 .done {
     text-decoration: line-through solid 2px;
     caret-color: transparent;

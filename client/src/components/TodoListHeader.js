@@ -2,7 +2,6 @@ import { Badge, SearchBar } from "../components";
 import styles from "./TodoListHeader.module.css";
 
 export const TodoListHeader = ({ tasks }) => {
-    console.log(tasks);
     const completedTaskNum = tasks.reduce((total, task) => task.isDone ? total + 1 : total, 0);
 
     return (
