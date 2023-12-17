@@ -1,3 +1,15 @@
+.task {
+    margin: 10px 0;
+}
+
+.task:first-child {
+    margin-top: 0;
+}
+
+.task:last-child {
+    margin-bottom: 0;
+}
+
 .done {
     text-decoration: line-through solid 2px;
     caret-color: transparent;

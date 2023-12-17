@@ -1,0 +1,12 @@
+.header {
+    padding: 10px;
+    border-radius: 0.375rem;
+    background-color: #c6d5f7;
+    margin-bottom: 8px;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+}

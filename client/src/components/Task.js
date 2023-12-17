@@ -8,7 +8,7 @@ import { ItemTypes } from '../utils';
 import styles from './Task.module.css';
 
 export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
-    const { id, task: content, isDone } = task;
+    const { id, name, isDone } = task;
     const dragRef = useRef(null);
     
     const [{ opacity }, drag, dragPreview] = useDrag({
@@ -66,7 +66,7 @@ export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
     drag(dragRef);
 
     return (
-        <InputGroup className={`my-1 ${opacity}`} data-handler-id={handlerId} ref={drop}>
+        <InputGroup className={`${styles.task} ${opacity}`} data-handler-id={handlerId} ref={drop}>
             <span className="input-group-text border-dark p-1" style={{ cursor: "move" }} ref={dragRef}>
                 <i className="bi bi-grip-vertical" style={{ fontSize: "1.5em" }} />
             </span>
@@ -78,7 +78,7 @@ export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
             <Form.Control 
                 type="text" 
                 className={`border-dark ${isDone ? styles.done : ""}`}
-                value={content} 
+                value={name} 
                 onChange={(e) => onEdit(e, task)} 
                 placeholder="Enter your task" 
                 readOnly={isDone}

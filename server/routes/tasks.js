@@ -13,17 +13,17 @@ router.get("/", async (req, res) => {
 
     const tasks = await Task.find({ username }, "-username").sort({ priority: 1 }).exec();
 
-    res.send(tasks.map(({ _id, task, priority, isDone }) => ({ id: _id, task, priority, isDone })));
+    res.send(tasks.map(({ _id, name, priority, isDone }) => ({ id: _id, name, priority, isDone })));
 });
 
 router.post("/", async (req, res) => {
     const { username } = req.payload;
-    const { task } = req.body;
+    const { taskName } = req.body;
 
     const priority = await Task.countDocuments({ username }).exec() + 1;
-    const { _id, isDone } = await Task.create({ task, priority, username });
+    const { _id, isDone } = await Task.create({ name: taskName, priority, username });
 
-    res.setHeader("Location", `http://localhost:3000/api/tasks/${_id}`).status(201).send({ id: _id, task, priority, isDone });
+    res.status(201).send({ id: _id, name: taskName, priority, isDone });
 });
 
 router.put("/", async (req, res) => {
