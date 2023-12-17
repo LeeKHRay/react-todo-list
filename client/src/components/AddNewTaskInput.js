@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { postRequest } from "../utils";
 
-export const AddNewTaskInput = ({onAddTask: addTask}) => {
+export const AddNewTaskInput = ({onAdd: addTask}) => {
     const [taskName, setTaskName] = useState("");
 
     const handleChange = ({ target }) => {
