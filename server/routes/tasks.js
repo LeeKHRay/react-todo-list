@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
     .sort({ priority: 1 })
     .exec();
 
-    res.send(tasks.map(({ _id, name, priority, isDone }) => ({ id: _id, name, priority, isDone })));
+    res.send(tasks.map(({ _id, name, priority, isCompleted }) => ({ id: _id, name, priority, isCompleted })));
 });
 
 router.post("/", async (req, res) => {
@@ -27,9 +27,9 @@ router.post("/", async (req, res) => {
     const { taskName } = req.body;
 
     const priority = await Task.countDocuments({ username }).exec() + 1;
-    const { _id, isDone } = await Task.create({ name: taskName, priority, username });
+    const { _id } = await Task.create({ name: taskName, priority, username });
 
-    res.status(201).send({ id: _id, name: taskName, priority, isDone });
+    res.status(201).send({ id: _id, name: taskName, priority, isCompleted: false });
 });
 
 router.put("/", async (req, res) => {

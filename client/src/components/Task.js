@@ -8,7 +8,7 @@ import { ItemTypes } from '../utils';
 import styles from './Task.module.css';
 
 export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
-    const { id, name, isDone } = task;
+    const { id, name, isCompleted } = task;
     const dragRef = useRef(null);
     
     const [{ opacity }, drag, dragPreview] = useDrag({
@@ -72,16 +72,16 @@ export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
             </span>
             <span className="input-group-text border-success">
                 <div>
-                    <input type="checkbox" className="form-check-input border-success" checked={isDone} onChange={(e) => onComplete(e, task)} />
+                    <input type="checkbox" className="form-check-input border-success" checked={isCompleted} onChange={(e) => onComplete(e, task)} />
                 </div>
             </span>
             <Form.Control 
                 type="text" 
-                className={`border-success ${isDone ? styles.done : ""}`}
+                className={`border-success ${isCompleted ? styles.complete : ""}`}
                 value={name} 
                 onChange={(e) => onEdit(e, task)} 
                 placeholder="Enter your task" 
-                readOnly={isDone}
+                readOnly={isCompleted}
             />
             <Button variant="danger" className="border-success" onClick={() => onDelete(id)}>
                 <i className="bi-trash" />

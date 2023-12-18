@@ -6,7 +6,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import styles from './Task.module.css';
 
 // use memo to avoid rerendering DraggableTaskPreview when dragging
-export const DraggableTaskPreview = memo(({ task: { name, isDone }}) => {
+export const DraggableTaskPreview = memo(({ task: { name, isCompleted }}) => {
     return (
         <Container className="m-0">
             <div style={{padding: "0 10px"}}>
@@ -16,12 +16,12 @@ export const DraggableTaskPreview = memo(({ task: { name, isDone }}) => {
                     </span>
                     <span className="input-group-text border-success">
                         <div>
-                            <input type="checkbox" className="form-check-input border-success" checked={isDone} readOnly />
+                            <input type="checkbox" className="form-check-input border-success" checked={isCompleted} readOnly />
                         </div>
                     </span>
                     <Form.Control 
                         type="text" 
-                        className={`border-success ${isDone ? styles.done : ""}`}
+                        className={`border-success ${isCompleted ? styles.complete : ""}`}
                         value={name} 
                         placeholder="Enter your task" 
                         readOnly
