@@ -18,7 +18,7 @@
     font-size: 1.5em;
 }
 
-.done {
+.complete {
     text-decoration: line-through solid 2px;
     caret-color: transparent;
 }

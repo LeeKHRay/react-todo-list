@@ -2,7 +2,7 @@ import { Badge, SearchBar } from "../components";
 import styles from "./TodoListHeader.module.css";
 
 export const TodoListHeader = ({ tasks, onGet }) => {
-    const completedTaskNum = tasks.reduce((total, task) => task.isDone ? total + 1 : total, 0);
+    const completedTaskNum = tasks.reduce((total, task) => task.isCompleted ? total + 1 : total, 0);
 
     return (
         <div className={styles.header}>

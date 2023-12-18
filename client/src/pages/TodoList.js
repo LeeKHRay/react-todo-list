@@ -42,8 +42,7 @@ export const TodoList = () => {
         handleGet();
     }, []);
 
-    const handleGet = (searchString) => {
-        (async () => {
+    const handleGet = async searchString => {
             let url = "/api/tasks";
             if (searchString) {
                 url += `?search=${searchString}`;
@@ -57,13 +56,12 @@ export const TodoList = () => {
             else {
                 navigate("/login", { replace: true });
             }
-        })();
     };
 
     const handleAdd = task => dispatch({ type: "add_task", newTask: task });
 
     const handleComplete = useCallback(({ target }, task) => {
-        dispatch({ type: "edit_task", task: { ...task, isDone: target.checked }});
+        dispatch({ type: "edit_task", task: { ...task, isCompleted: target.checked }});
     }, []);
 
     const handleEdit = useCallback(({ target }, task) => dispatch({ type: "edit_task", task: { ...task, name: target.value }}), []);
