@@ -6,5 +6,6 @@ export * from "./Logout";
 export * from "./Navbar";
 export * from "./SearchBar";
 export * from "./Task";
+export * from "./TodoListContent";
 export * from "./TodoListFooter";
 export * from "./TodoListHeader";
