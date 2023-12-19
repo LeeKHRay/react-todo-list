@@ -1,7 +1,10 @@
 import { Badge, SearchBar } from "../components";
+import { useTasksContext } from "../contexts";
 import styles from "./TodoListHeader.module.css";
 
-export const TodoListHeader = ({ tasks, onGet }) => {
+export const TodoListHeader = () => {
+    const { tasks } = useTasksContext();
+    
     const completedTaskNum = tasks.reduce((total, task) => task.isCompleted ? total + 1 : total, 0);
 
     return (
@@ -12,7 +15,7 @@ export const TodoListHeader = ({ tasks, onGet }) => {
                 <Badge text="Remaining" number={tasks.length - completedTaskNum} />
                 <Badge text="Total" number={tasks.length} />
             </div>
-            <SearchBar onGet={onGet} />
+            <SearchBar />
         </div>
     );
 };

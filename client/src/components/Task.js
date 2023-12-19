@@ -4,16 +4,18 @@ import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from 'react-dnd-html5-backend'
+import { useTasksContext } from '../contexts';
 import { ItemTypes } from '../utils';
 import styles from './Task.module.css';
 
-export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
+export const Task = memo(({ task, idx }) => {
     const { id, name, isCompleted } = task;
     const dragRef = useRef(null);
+    const { completeTask, editTask, moveTask, deleteTask } = useTasksContext();
     
     const [{ opacity }, drag, dragPreview] = useDrag({
         type: ItemTypes.TASK,
-        item: () => ({ task }),
+        item: () => ({ task, idx }),
         collect: (monitor) => ({
             opacity: monitor.isDragging() ? "opacity-0" : "opacity-100" 
         })
@@ -29,13 +31,16 @@ export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
                 return;
             }
 
-            const dragIdx = item.task.priority - 1;
-            const hoverIdx = task.priority - 1;
+            const dragTask = item.task;
+            const hoverTask = task;
 
-            if (dragIdx === hoverIdx) {
+            if (dragTask.priority === hoverTask.priority) {
                 return;
             }
 
+            const dragIdx = item.idx;
+            const hoverIdx = idx;
+            
             const hoverBoundingRect = dragRef.current?.getBoundingClientRect() // get size of drop area and its position relative to the viewport
             const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2 // get vertical middle
             const clientOffset = monitor.getClientOffset() // get cursor position            
@@ -49,13 +54,14 @@ export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
                 return
             }
 
-            onMove(dragIdx, hoverIdx) // only swap the tasks when the cursor has crossed half of the items height
+            moveTask(dragTask, dragIdx, hoverTask, hoverIdx) // only swap the tasks when the cursor has crossed half of the items height
 
             // Note: we're mutating the monitor item here!
             // Generally it's better to avoid mutations,
             // but it's good here for the sake of performance
             // to avoid expensive index searches.
-            item.task.priority = hoverIdx + 1;
+            item.idx = hoverIdx;
+            item.task.priority = task.priority;
         }
     });
 
@@ -64,7 +70,7 @@ export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
     }, []);
 
     drag(dragRef);
-
+    
     return (
         <InputGroup className={`${styles.task} ${opacity}`} data-handler-id={handlerId} ref={drop}>
             <span className={`input-group-text border-success p-1 ${styles.dragHandle}`} ref={dragRef}>
@@ -72,18 +78,18 @@ export const Task = memo(({ task, onComplete, onEdit, onDelete, onMove }) => {
             </span>
             <span className="input-group-text border-success">
                 <div>
-                    <input type="checkbox" className="form-check-input border-success" checked={isCompleted} onChange={(e) => onComplete(e, task)} />
+                    <input type="checkbox" className="form-check-input border-success" checked={isCompleted} onChange={(e) => completeTask(e, task, idx)} />
                 </div>
             </span>
             <Form.Control 
                 type="text" 
                 className={`border-success ${isCompleted ? styles.complete : ""}`}
                 value={name} 
-                onChange={(e) => onEdit(e, task)} 
+                onChange={(e) => editTask(e, task, idx)} 
                 placeholder="Enter your task" 
                 readOnly={isCompleted}
             />
-            <Button variant="danger" className="border-success" onClick={() => onDelete(id)}>
+            <Button variant="danger" className="border-success" onClick={() => deleteTask(id)}>
                 <i className="bi-trash" />
             </Button>
         </InputGroup>
