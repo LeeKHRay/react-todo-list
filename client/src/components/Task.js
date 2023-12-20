@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from 'react-dnd-html5-backend'
-import { useTasksContext } from '../contexts';
+import { useTasksContext } from '../contexts/TasksContext';
 import { ItemTypes } from '../utils';
 import styles from './Task.module.css';
 

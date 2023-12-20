@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { useTasksContext } from "../contexts";
+import { useTasksContext } from "../contexts/TasksContext";
 import { postRequest } from "../utils";
 
 export const AddNewTaskInput = () => {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDebounce } from "../hooks";
-import { useTasksContext } from "../contexts";
+import { useTasksContext } from "../contexts/TasksContext";
 
 export const SearchBar = () => {
     const [searchString, setSearchString] = useState(null);

@@ -1,7 +1,7 @@
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Task, CustomDragLayer } from "../components";
-import { useTasksContext } from "../contexts";
+import { useTasksContext } from "../contexts/TasksContext";
 
 export const TodoListContent = () => {
     const { tasks } = useTasksContext();

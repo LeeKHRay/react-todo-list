@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from "react-bootstrap/Form";
 import { postRequest } from '../utils';
 import { useFormState } from '../hooks';
-import { useAuthContext } from '../contexts';
+import { useAuthContext } from '../contexts/AuthContext';
 
 export const Login = () => {
     const [formState, setFormState, response, setResponse] = useFormState({ username: "", password: "" });
