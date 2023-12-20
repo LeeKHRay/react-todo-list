@@ -4,6 +4,10 @@ import { useAuthContext } from "../contexts/AuthContext";
 
 export const ProtectedRoute = ({ canAccess, redirect }) => {
     const { isValidatedToken } = useAuthContext();
-    console.log(canAccess, redirect, isValidatedToken)
-    return !isValidatedToken ? <Spinner animation="border" /> : canAccess ? <Outlet /> : <Navigate to={redirect} replace />
+
+    if (!isValidatedToken) {
+        return <Spinner animation="border" />;
+    }
+    
+    return canAccess ? <Outlet /> : <Navigate to={redirect} replace />
 }
