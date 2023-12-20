@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { getRequest, setAuthToken, removeAuthToken } from "../utils";
 
 const AuthContext = createContext();
@@ -7,7 +7,7 @@ export const useAuthContext = () => {
     const auth = useContext(AuthContext);
 
     if (!auth) {
-            throw new Error("useAuthContext must be used within AuthProvider");
+        throw new Error("useAuthContext must be used within AuthProvider");
     }
     
     return auth;
@@ -38,15 +38,15 @@ export const AuthProvider = ({ children }) => {
         })();
     }, []);
 
-    const login = useCallback(async (token) => {
+    const login = async (token) => {
         setAuthToken(token);
         setUser(await getUser());
-    }, []);
+    };
 
-    const logout = useCallback(() => {
+    const logout = () => {
         removeAuthToken();
         setUser(null);
-    }, []);
+    };
 
     const contextValue = useMemo(() => ({ user, isValidatedToken, login, logout }), [user, isValidatedToken]);
 
