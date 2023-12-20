@@ -1,8 +1,19 @@
-import { createContext, useContext, useReducer, useEffect, useMemo, useCallback } from "react";
+import { createContext, useContext, useReducer, useEffect, useMemo, useRef } from "react";
+import { useDebounce } from "../hooks";
 import { getRequest, putRequest, deleteRequest } from "../utils";
 import { useNavigate } from "react-router-dom";
 
 const TasksContext = createContext();
+
+export const useTasksContext = () => {
+    const obj = useContext(TasksContext);
+
+    if (!obj) {
+        throw new Error("useTasksContext must be used within TasksProvider");
+    }
+    
+    return obj;
+}
 
 const reducer = (tasks, action) => {
     switch (action.type) {
@@ -18,7 +29,7 @@ const reducer = (tasks, action) => {
             return newTasks;
         }
         case "remove_task": {
-            return tasks.filter(({ id }) => id !== action.taskId);
+            return tasks.filter(({ id }) => id !== action.id);
         }
         case "move_task": {
             const { dragTask, dragIdx, hoverTask, hoverIdx } = action;
@@ -35,23 +46,10 @@ const reducer = (tasks, action) => {
     }
 };
 
-export const useTasksContext = () => {
-    const obj = useContext(TasksContext);
-
-    if (!obj) {
-        throw new Error("useTasksContext must be used within TasksProvider");
-    }
-    
-    return obj;
-}
-
 export const TasksProvider = ({ children }) => {
     const [tasks, dispatch] = useReducer(reducer, []);
+    const editedTasks = useRef({});
     const navigate = useNavigate();
-
-    useEffect(() => {
-        getTasks();
-    }, []);
 
     const getTasks = async searchString => {
         const res = await getRequest(`/api/tasks${searchString ? "?search=" + searchString : ""}`);
@@ -67,27 +65,119 @@ export const TasksProvider = ({ children }) => {
     const addTask = task => dispatch({ type: "add_task", newTask: task });
     
     const completeTask = ({ target }, task, idx) => {
-        const newTask = { ...task, isCompleted: target.checked };
-        dispatch({ type: "edit_task", task: newTask, idx });
+        const editedTask = { ...task, isCompleted: target.checked };
+        dispatch({ type: "edit_task", task: editedTask, idx });
+
+        const { id, name, isCompleted, priority } = editedTask;
+        if (editedTasks.current[id]) {
+            const { origName, origIsCompleted, origPriority } = editedTasks.current[id];
+
+            // check if the task is the same as before
+            if (name === origName && isCompleted === origIsCompleted && priority === origPriority) {
+                // remove the unmodified task to avoid sending unnecessary data to server
+                delete editedTasks.current[id];
+            }
+            else {
+                editedTasks.current[id].isCompleted = isCompleted;
+            }
+
+            return;
+        }
+
+        editedTasks.current[id] = { ...editedTask, origName: name, origIsCompleted: isCompleted, origPriority: priority };
     };
 
     const editTask = ({ target }, task, idx) => {
-        const newTask = { ...task, name: target.value };
-        dispatch({ type: "edit_task", task: newTask, idx});
+        const editedTask = { ...task, name: target.value };
+        dispatch({ type: "edit_task", task: editedTask, idx});
+
+        const { id, name, isCompleted, priority } = editedTask;
+        if (editedTasks.current[id]) {
+            const { origName, origIsCompleted, origPriority } = editedTasks.current[id];
+
+            if (name === "" || (name === origName && isCompleted === origIsCompleted && priority === origPriority)) {
+                // remove the empty/unmodified task to avoid sending unnecessary data to server
+                delete editedTasks.current[id];
+            }
+            else {
+                editedTasks.current[id].name = name;
+            }
+
+            return;
+        }
+
+        if (name === "") { // don't update empty task
+            return;
+        }
+
+        editedTasks.current[id] = { ...editedTask, origName: task.name, origIsCompleted: task.isCompleted, origPriority: task.priority };
     };
     
     const moveTask = (dragTask, dragIdx, hoverTask, hoverIdx) => {
-        const newDragTask = { ...dragTask, priority: hoverTask.priority }
-        const newHoverTask = { ...hoverTask, priority: dragTask.priority };
-        dispatch({ type: "move_task", dragTask: newDragTask, dragIdx, hoverTask: newHoverTask, hoverIdx });
+        const editedDragTask = { ...dragTask, priority: hoverTask.priority }
+        const editedHoverTask = { ...hoverTask, priority: dragTask.priority };
+        dispatch({ type: "move_task", dragTask: editedDragTask, dragIdx, hoverTask: editedHoverTask, hoverIdx });
+
+        const { id: dragTaskId } = editedDragTask;
+        if (editedTasks.current[dragTaskId]) {
+            const { name, isCompleted, priority } = editedDragTask;
+            const { origName, origIsCompleted, origPriority } = editedTasks.current[dragTaskId];
+            if (name === origName && isCompleted === origIsCompleted && priority === origPriority) { 
+                delete editedTasks.current[dragTaskId];
+            }
+            else {
+                editedTasks.current[dragTaskId].priority = editedDragTask.priority;
+            }
+        }
+        else {
+            editedTasks.current[dragTaskId] = { ...editedDragTask, origName: dragTask.name, origIsCompleted: dragTask.isCompleted, origPriority: dragTask.priority };
+        }
+
+        const { id: hoverTaskId } = editedHoverTask;
+        if (editedTasks.current[hoverTaskId]) {
+            const { name, isCompleted, priority } = editedHoverTask;
+            const { origName, origIsCompleted, origPriority } = editedTasks.current[hoverTaskId];
+            if (name === origName && isCompleted === origIsCompleted && priority === origPriority) { 
+                delete editedTasks.current[hoverTaskId];
+            }
+            else {
+                editedTasks.current[hoverTaskId].priority = editedHoverTask.priority;
+            }
+        }
+        else {
+            editedTasks.current[hoverTaskId] = { ...editedHoverTask, origName: hoverTask.name, origIsCompleted: hoverTask.isCompleted, origPriority: hoverTask.priority };
+        }
     };
 
     const deleteTask = (id) => {
         if (window.confirm("Are you sure you want to delete this task?")) {
             deleteRequest(`/api/tasks/${id}`);
-            dispatch({ type: "remove_task", taskId: id });
+            dispatch({ type: "remove_task", id });
+
+            delete editedTasks.current[id];
         }
     };
+
+    const saveEditedTasks = async () => {
+        const arr = Object.values(editedTasks.current).map(({ origName, origIsCompleted, origPriority, ...task }) => task);
+        if (arr.length > 0) {
+            await putRequest("/api/tasks", arr);
+            editedTasks.current = {};
+        }
+    };
+
+    useEffect(() => {
+        getTasks(); // get tasks in the first render
+        window.addEventListener("beforeunload", saveEditedTasks); // save tasks before the browser/tab closes
+
+        return () => {
+            saveEditedTasks(); // save tasks before the component unmounts
+            window.removeEventListener("beforeunload", saveEditedTasks);
+        };
+    }, []);
+
+    // autosave
+    useDebounce(saveEditedTasks, 1500, [tasks]);
 
     const contextValue = useMemo(() => ({ tasks, getTasks, addTask, completeTask, editTask, moveTask, deleteTask }), [tasks]);
 
