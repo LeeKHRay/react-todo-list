@@ -1,8 +1,7 @@
-import "bootstrap-icons/font/bootstrap-icons.css";
 import { TodoListHeader, TodoListContent, TodoListFooter } from "../components";
-import { TasksProvider } from "../contexts";
+import { TasksProvider } from "../contexts/TasksContext";
 
-export const TodoList = () => {
+export const TodoList = () => {    
     return (
         <TasksProvider>
             <TodoListHeader />

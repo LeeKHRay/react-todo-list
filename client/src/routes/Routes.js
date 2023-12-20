@@ -2,7 +2,7 @@ import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 import { Home, About, Login, SignUp, TodoList } from '../pages';
 import { PageLayout } from '../layouts';
 import { ProtectedRoute } from '../routes';
-import { useAuthContext } from '../contexts';
+import { useAuthContext } from '../contexts/AuthContext';
 
 export const Routes = () => {
     const { user } = useAuthContext();

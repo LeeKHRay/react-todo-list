@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import BSNavbar from 'react-bootstrap/Navbar';
 import { NavLink } from 'react-router-dom';
 import { Logout } from '../components';
-import { useAuthContext } from '../contexts';
+import { useAuthContext } from '../contexts/AuthContext';
 
 export const Navbar = () => {
     const { user, isValidatedToken } = useAuthContext();
