@@ -26,8 +26,8 @@ router.post("/", async (req, res) => {
     const { username } = req.payload;
     const { taskName } = req.body;
 
-    const priority = await Task.countDocuments({ username }).exec() + 1;
-    const { _id } = await Task.create({ name: taskName, priority, username });
+    const [{ priority: prevPriority } = { priority: 0 }] = await Task.find({ username }, "priority").sort({ priority: -1 }).limit(1); // get the max priority
+    const { _id, priority } = await Task.create({ name: taskName, priority: prevPriority + 1, username });
 
     res.status(201).send({ id: _id, name: taskName, priority, isCompleted: false });
 });
@@ -36,16 +36,22 @@ router.put("/", async (req, res) => {
     const { username } = req.payload;
     const tasks = req.body;
 
-    await Task.bulkWrite(tasks.map((task) => ({
-        replaceOne: {
-            upsert: true,
-            filter: { _id: new mongoose.Types.ObjectId(task.id), username },
-            replacement: {
-                ...task,
-                username
-            }
+    await Task.bulkWrite(tasks.reduce((arr, task) => {
+        if (task.name) { // only update non-empty tasks
+            arr.push({
+                replaceOne: {
+                    upsert: true,
+                    filter: { _id: new mongoose.Types.ObjectId(task.id), username },
+                    replacement: {
+                        ...task,
+                        username
+                    }
+                }
+            });
         }
-    })));
+
+        return arr;
+    }, []));
 
     res.send({});
 });
