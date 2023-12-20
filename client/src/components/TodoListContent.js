@@ -11,13 +11,7 @@ export const TodoListContent = () => {
         <DndProvider backend={HTML5Backend}>
             <div style={{padding: "10px", backgroundColor: "#c6f7da", border: "1px solid #20c997", borderRadius: "0.375rem", marginBottom: 70}}>
                 {
-                    tasks.map((task, idx) =>
-                        <Task 
-                            key={task.id} 
-                            task={task} 
-                            idx={idx} 
-                        />
-                    )
+                    tasks.map((task, idx) => <Task key={task.id} task={task} idx={idx} />)
                 }
             </div>
             <CustomDragLayer />
