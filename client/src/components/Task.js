@@ -34,7 +34,7 @@ export const Task = memo(({ task, idx }) => {
             const dragTask = item.task;
             const hoverTask = task;
 
-            if (dragTask.priority === hoverTask.priority) {
+            if (dragTask.id === hoverTask.id || dragTask.priority === hoverTask.priority) {
                 return;
             }
 
