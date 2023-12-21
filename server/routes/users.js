@@ -9,8 +9,6 @@ const { authentication } = require("../middlewares");
 const User = require("../models/User");
 
 router.post("/signup", async (req, res) => {
-    console.log(req.body);
-
     const { username, password, repeatPassword } = req.body;
 
     if (username === "" || password === "" || repeatPassword === "") {
@@ -51,8 +49,6 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-    console.log(req.body);
-
     const { username, password } = req.body;
 
     if (username === "" || password === "") {
