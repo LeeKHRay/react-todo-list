@@ -59,7 +59,7 @@ export const SignUp = () => {
 
                 {response && <Alert variant={response.ok ? "success" : "danger"}>{response.message}</Alert>}
 
-                <Button variant="success" type="submit">Submit</Button>
+                <Button variant="success" type="submit">Sign Up</Button>
             </Form>
         </>
     )
