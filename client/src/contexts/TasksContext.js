@@ -159,9 +159,9 @@ export const TasksProvider = ({ children }) => {
     };
 
     const saveEditedTasks = async () => {
-        const arr = Object.values(editedTasks.current).map(({ origName, origIsCompleted, origPriority, ...task }) => task);
-        if (arr.length > 0) {
-            await putRequest("/api/tasks", arr);
+        const editedTasksArr = Object.values(editedTasks.current).map(({ origName, origIsCompleted, origPriority, ...task }) => task);
+        if (editedTasksArr.length > 0) {
+            await putRequest("/api/tasks", editedTasksArr);
             editedTasks.current = {};
         }
     };
