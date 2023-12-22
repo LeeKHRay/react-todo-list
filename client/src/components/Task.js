@@ -4,15 +4,13 @@ import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from 'react-dnd-html5-backend'
-import { useTasksContext } from '../contexts/TasksContext';
 import { ItemTypes } from '../utils';
 import styles from './Task.module.css';
 
-export const Task = memo(({ task, idx }) => {
+export const Task = memo(({ task, idx, onComplete, onEdit, onMove, onDelete }) => {
     const { id, name, isCompleted } = task;
     const dragRef = useRef(null);
-    const { completeTask, editTask, moveTask, deleteTask } = useTasksContext();
-    
+
     const [{ opacity }, drag, dragPreview] = useDrag({
         type: ItemTypes.TASK,
         item: () => ({ task, idx }),
@@ -54,7 +52,7 @@ export const Task = memo(({ task, idx }) => {
                 return
             }
 
-            moveTask(dragTask, dragIdx, hoverTask, hoverIdx) // only swap the tasks when the cursor has crossed half of the items height
+            onMove(dragTask, dragIdx, hoverTask, hoverIdx) // only swap the tasks when the cursor has crossed half of the items height
 
             // Note: we're mutating the monitor item here!
             // Generally it's better to avoid mutations,
@@ -78,18 +76,18 @@ export const Task = memo(({ task, idx }) => {
             </span>
             <span className="input-group-text border-success">
                 <div>
-                    <input type="checkbox" className="form-check-input border-success" checked={isCompleted} onChange={(e) => completeTask(e, task, idx)} />
+                    <input type="checkbox" className="form-check-input border-success" checked={isCompleted} onChange={(e) => onComplete(e, task, idx)} />
                 </div>
             </span>
             <Form.Control 
                 type="text" 
                 className={`border-success ${isCompleted ? styles.complete : ""}`}
                 value={name} 
-                onChange={(e) => editTask(e, task, idx)} 
+                onChange={(e) => onEdit(e, task, idx)} 
                 placeholder="Enter your task" 
                 readOnly={isCompleted}
             />
-            <Button variant="danger" className="border-success" onClick={() => deleteTask(id)}>
+            <Button variant="danger" className="border-success" onClick={() => onDelete(id)}>
                 <i className="bi-trash" />
             </Button>
         </InputGroup>

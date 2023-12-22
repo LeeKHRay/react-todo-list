@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useEffect, useMemo, useRef } from "react";
+import { createContext, useContext, useReducer, useEffect, useCallback, useMemo, useRef } from "react";
 import { useDebounce } from "../hooks";
 import { getRequest, putRequest, deleteRequest } from "../utils";
 import { useNavigate } from "react-router-dom";
@@ -64,7 +64,7 @@ export const TasksProvider = ({ children }) => {
 
     const addTask = task => dispatch({ type: "add_task", newTask: task });
     
-    const completeTask = ({ target }, task, idx) => {
+    const completeTask = useCallback(({ target }, task, idx) => {
         const editedTask = { ...task, isCompleted: target.checked };
         dispatch({ type: "edit_task", task: editedTask, idx });
 
@@ -85,9 +85,9 @@ export const TasksProvider = ({ children }) => {
         }
 
         editedTasks.current[id] = { ...editedTask, origName: name, origIsCompleted: isCompleted, origPriority: priority };
-    };
+    }, []);
 
-    const editTask = ({ target }, task, idx) => {
+    const editTask = useCallback(({ target }, task, idx) => {
         const editedTask = { ...task, name: target.value };
         dispatch({ type: "edit_task", task: editedTask, idx});
 
@@ -111,9 +111,9 @@ export const TasksProvider = ({ children }) => {
         }
 
         editedTasks.current[id] = { ...editedTask, origName: task.name, origIsCompleted: task.isCompleted, origPriority: task.priority };
-    };
+    }, []);
     
-    const moveTask = (dragTask, dragIdx, hoverTask, hoverIdx) => {
+    const moveTask = useCallback((dragTask, dragIdx, hoverTask, hoverIdx) => {
         const editedDragTask = { ...dragTask, priority: hoverTask.priority }
         const editedHoverTask = { ...hoverTask, priority: dragTask.priority };
         dispatch({ type: "move_task", dragTask: editedDragTask, dragIdx, hoverTask: editedHoverTask, hoverIdx });
@@ -147,16 +147,16 @@ export const TasksProvider = ({ children }) => {
         else {
             editedTasks.current[hoverTaskId] = { ...editedHoverTask, origName: hoverTask.name, origIsCompleted: hoverTask.isCompleted, origPriority: hoverTask.priority };
         }
-    };
+    }, []);
 
-    const deleteTask = (id) => {
+    const deleteTask = useCallback((id) => {
         if (window.confirm("Are you sure you want to delete this task?")) {
             deleteRequest(`/api/tasks/${id}`);
             dispatch({ type: "remove_task", id });
 
             delete editedTasks.current[id];
         }
-    };
+    }, []);
 
     const saveEditedTasks = async () => {
         const editedTasksArr = Object.values(editedTasks.current).map(({ origName, origIsCompleted, origPriority, ...task }) => task);
