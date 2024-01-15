@@ -2,7 +2,7 @@
 
 Clone this repository. You will need `node` and `npm` installed globally on your machine.
 
-Replace the value of `mongoDBURL` in `server/config/db_connection.js` with your MongoDB server URL
+Replace the value of `mongoDBURL` in `server/config/db_connection.js` with your MongoDB connection string.
 
 Install dependencies:
 in `client` and `server`, run `npm install`
