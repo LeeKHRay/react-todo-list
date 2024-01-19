@@ -1,15 +1,26 @@
-import { createContext, useContext, useReducer, useEffect, useCallback, useMemo, useRef } from "react";
+import { createContext, useContext, useReducer, useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useDebounce } from "../hooks";
 import { getRequest, putRequest, deleteRequest } from "../utils";
 import { useNavigate } from "react-router-dom";
 
 const TasksContext = createContext();
+const TasksIsSavedContext = createContext();
 
 export const useTasksContext = () => {
     const obj = useContext(TasksContext);
 
     if (!obj) {
         throw new Error("useTasksContext must be used within TasksProvider");
+    }
+    
+    return obj;
+}
+
+export const useTasksIsSavedContext = () => {
+    const obj = useContext(TasksIsSavedContext);
+
+    if (!obj) {
+        throw new Error("useTasksIsSavedContext must be used within TasksProvider");
     }
     
     return obj;
@@ -49,6 +60,7 @@ const reducer = (tasks, action) => {
 export const TasksProvider = ({ children }) => {
     const [tasks, dispatch] = useReducer(reducer, []);
     const editedTasks = useRef({});
+    const [isSaved, setIsSaved] = useState(false);
     const navigate = useNavigate();
 
     const getTasks = async searchString => {
@@ -84,7 +96,7 @@ export const TasksProvider = ({ children }) => {
             return;
         }
 
-        editedTasks.current[id] = { ...editedTask, origName: name, origIsCompleted: isCompleted, origPriority: priority };
+        editedTasks.current[id] = { ...editedTask, origName: task.name, origIsCompleted: task.isCompleted, origPriority: task.priority };
     }, []);
 
     const editTask = useCallback(({ target }, task, idx) => {
@@ -163,6 +175,7 @@ export const TasksProvider = ({ children }) => {
         if (editedTasksArr.length > 0) {
             await putRequest("/api/tasks", editedTasksArr);
             editedTasks.current = {};
+            setIsSaved(true);
         }
     };
 
@@ -179,11 +192,24 @@ export const TasksProvider = ({ children }) => {
     // autosave
     useDebounce(saveEditedTasks, 1500, [tasks]);
 
-    const contextValue = useMemo(() => ({ tasks, getTasks, addTask, completeTask, editTask, moveTask, deleteTask }), [tasks]);
+    useEffect(() => {
+        let timer;
+
+        if (isSaved) {
+            timer = setTimeout(() => setIsSaved(false), 2000);
+        }
+
+        return () => clearTimeout(timer);
+    }, [isSaved]);
+
+    const TasksContextValue = useMemo(() => ({ tasks, getTasks, addTask, completeTask, editTask, moveTask, deleteTask }), [tasks]);
+    const TasksIsSavedContextValue = useMemo(() => ({ isSaved }), [isSaved]);
 
     return (
-        <TasksContext.Provider value={contextValue}>
-            {children}
+        <TasksContext.Provider value={TasksContextValue}>
+            <TasksIsSavedContext.Provider value={TasksIsSavedContextValue}>
+                {children}
+            </TasksIsSavedContext.Provider>
         </TasksContext.Provider>
     )
 }

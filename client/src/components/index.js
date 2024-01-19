@@ -4,6 +4,7 @@ export * from "./CustomDragLayer";
 export * from "./DraggableTaskPreview";
 export * from "./Logout";
 export * from "./Navbar";
+export * from "./AutosaveNotification";
 export * from "./SearchBar";
 export * from "./Task";
 export * from "./TodoListContent";
